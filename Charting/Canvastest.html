@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        BTC price simulation, Let's make the Bull run begin in 2019
+    </n>
+        <p>Please put in unixtimestamp</p>      
+    </header>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src='../node_modules/chart.js/dist/Chart.js'></script>
+<body>
+Begin:<br>
+<input type="number" id="begin" size="40"><br>
+End:<br>
+<input type="number" id="end" size="40"><br>
+<input type="button" id="submit" value="Submit">
+</body>
+<canvas id="myChart" width="180" height="100"></canvas>
+<script>
+  var labeltime=[]
+  var entryprice=[]
+  var btcprice=[]
+$(document).ready(function(){
+  $("#submit").click(function(){
+      var begin=$('#begin').val()//1547480000
+      var end=$('#end').val()//1547485000
+    $.post('http://127.0.0.1:8000',{b:begin,e:end},function(data, status){
+        data
+        console.log(data)
+        for (i=0;i<data.length;i++){
+         labeltime[i]=data[i].t  
+         entryprice[i]=data[i].avgprice
+         btcprice[i]=data[i].c
+        }
+        var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labeltime,
+        datasets: [{
+            label: 'entryprice',
+            data: entryprice,
+            borderColor: 
+                'rgba(255,99,132,1)',
+            borderWidth: 1
+        },
+        {       
+          label: 'btcprice',
+          data: btcprice,
+          type: 'line',
+          borderColor: 
+              
+              'rgba(54, 162, 235, 1)',
+          
+            borderWidth: 1}
+        ]
+    },
+    
+});
+     });
+  });
+});
+  
+
+
+</script>
+</html>
