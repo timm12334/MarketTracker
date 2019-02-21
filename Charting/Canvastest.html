@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        BTC price simulation, Let's make the Bull run begin in 2019
+    </n>
+        <p>Please put in unixtimestamp</p>      
+    </header>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src='../node_modules/chart.js/dist/Chart.js'></script>
+<body>
+Begin:<br>
+<input type="number" id="begin" size="40"><br>
+End:<br>
+<input type="number" id="end" size="40"><br>
+<input type="button" id="submit" value="Submit">
+</body>
+<canvas id="myChart" width="180" height="100"></canvas>
+<script>
+  var labeltime=[]
+  var shortprice=[]
+  var longprice=[]
+  var btcprice=[]
+$(document).ready(function(){
+  $("#submit").click(function(){
+      var begin=$('#begin').val()//1547480000
+      var end=$('#end').val()//1547485000
+    $.post('http://18.221.10.144:8000',{b:begin,e:end},function(data, status){
+        data
+        for (i=0;i<data.length;i++){
+         labeltime[i]=data[i].t  
+         if(data[i].s<0){
+         shortprice[i]=data[i].avgprice
+         longprice[i]=0
+         console.log(shortprice[i])
+         }
+         else if(data[i].s>0){
+         longprice[i]=data[i].avgprice
+         shortprice[i]=0
+         }
+         else {
+        longprice[i]=0
+         shortprice[i]=0
+         }
+         btcprice[i]=data[i].c
+        }
+        var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labeltime,
+        datasets: [
+            {
+            label: 'longprice',
+            data: longprice,
+            borderColor: 
+                'rgba(144,198,149,1)',
+            backgroundColor: 'rgba(144,198,149,1)',
+            borderWidth: 1
+        },
+            {
+            label: 'shortprice',
+            data: shortprice,
+            borderColor: 
+            'rgba(255,99,132,1)',
+            backgroundColor:  'rgba(255,99,132,1)',
+            borderWidth: 1
+        },
+        {       
+          label: 'btcprice',
+          data: btcprice,
+          type: 'line',
+          borderColor: 
+              
+              'rgba(54, 162, 235, 1)',
+          
+            borderWidth: 1}
+        ]
+    },
+    
+});
+     });
+  });
+});
+  
+
+
+</script>
+</html>
